@@ -33,12 +33,16 @@
     - name: Push image
       command: docker push shabz1309/petstore:latest
 
-    - name: Stop and remove existing container if it exists
-      shell: |
-        if docker ps -a --format '{{.Names}}' | grep -q '^pet1$'; then
-          docker stop pet1 && docker rm pet1
-        fi
-      ignore_errors: yes
+    - name: Ensure old pet1 container is removed
+      community.docker.docker_container:
+        name: pet1
+        state: absent
 
-    - name: Run container
-      command: docker run -d --name pet1 -p 8081:8080 shabz1309/petstore:latest
+    - name: Run petstore container
+      community.docker.docker_container:
+        name: pet1
+        image: shabz1309/petstore:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "8081:8080"
