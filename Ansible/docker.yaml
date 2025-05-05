@@ -1,6 +1,8 @@
 - name: docker build and push
-  hosts: local  # Replace with the hostname or IP address of your target server
-  become: yes  # Run tasks with sudo privileges
+  hosts: all
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Update apt package cache
@@ -12,7 +14,7 @@
       args:
         chdir: /var/lib/jenkins/workspace/petstore
 
-    - name: tag image
+    - name: Tag image
       command: docker tag petstore:latest shabz1309/petstore:latest 
 
     - name: Log in to Docker Hub
