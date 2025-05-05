@@ -9,10 +9,17 @@
       apt:
         update_cache: yes   
 
+    - name: Copy petstore project to remote host
+      synchronize:
+        src: /var/lib/jenkins/workspace/petstore/
+        dest: /home/ubuntu/petstore/
+        recursive: yes
+        delete: yes
+
     - name: Build Docker Image
       command: docker build -t petstore .
       args:
-        chdir: /var/lib/jenkins/workspace/petstore
+        chdir: /home/ubuntu/petstore
 
     - name: Tag image
       command: docker tag petstore:latest shabz1309/petstore:latest 
